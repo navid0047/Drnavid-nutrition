@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Dr.Navid Nutrition</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#2563EB">
+<style>
+:root{--bg:#f6f7fb;--card:#fff;--muted:#6b7280;--accent:#2563EB}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial;background:var(--bg);color:#111}
+.app{max-width:900px;margin:18px auto;padding:16px}
+.card{background:var(--card);border-radius:12px;padding:12px;box-shadow:0 6px 18px rgba(15,23,42,0.06);margin-bottom:12px}
+.btn{padding:8px 12px;border-radius:8px;border:0;background:var(--accent);color:#fff;cursor:pointer}
+.small{font-size:13px;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="app">
+  <h1>Dr.Navid Nutrition</h1>
+  <div class="card">
+    <h3>محاسبه کالری</h3>
+    <div><label>جنسیت</label><select id="gender"><option value="male">مرد</option><option value="female">زن</option></select></div>
+    <div><label>سن</label><input id="age" type="number" value="30"></div>
+    <div><label>وزن (kg)</label><input id="weight" type="number" value="75"></div>
+    <div><label>قد (cm)</label><input id="height" type="number" value="175"></div>
+    <div><label>فعالیت</label><select id="activity"><option value="1.2">خیلی کم</option><option value="1.375">کم</option><option value="1.55" selected>متوسط</option><option value="1.725">بالا</option><option value="1.9">خیلی بالا</option></select></div>
+    <div style="margin-top:8px"><button class="btn" id="calc">محاسبه</button></div>
+    <div id="result" class="small"></div>
+  </div>
+
+  <div class="card">
+    <h3>فهرست غذاها (۲۰ مورد)</h3>
+    <button class="btn" id="load">بارگذاری غذاها</button>
+    <div id="foods" class="small"></div>
+  </div>
+
+  <div class="card small">درباره: دکتر نوید احمدی ، متخصص فیزیولوژی ورزشی.</div>
+</div>
+
+<script>
+const sampleFoods = [{"id": "f_rice_cooked", "name": "برنج پخته", "calories": 130, "protein": 2.7, "carb": 28, "fat": 0.3}, {"id": "f_sangak", "name": "نان سنگک", "calories": 250, "protein": 8, "carb": 52, "fat": 1}, {"id": "f_grilled_chicken", "name": "مرغ گریل", "calories": 165, "protein": 31, "carb": 0, "fat": 3.6}, {"id": "f_beef_cooked", "name": "گوشت قرمز پخته", "calories": 250, "protein": 26, "carb": 0, "fat": 15}, {"id": "f_trout", "name": "ماهی قزل‌آلا", "calories": 200, "protein": 22, "carb": 0, "fat": 12}, {"id": "f_boiled_egg", "name": "تخم‌مرغ آب‌پز", "calories": 155, "protein": 13, "carb": 1.1, "fat": 11}, {"id": "f_lentils_cooked", "name": "عدس پخته", "calories": 116, "protein": 9, "carb": 20, "fat": 0.4}, {"id": "f_bean_cooked", "name": "لوبیا چیتی پخته", "calories": 127, "protein": 9, "carb": 23, "fat": 0.5}, {"id": "f_potato_boiled", "name": "سیب‌زمینی پخته", "calories": 87, "protein": 2, "carb": 20, "fat": 0.1}, {"id": "f_apple", "name": "سیب", "calories": 52, "protein": 0.3, "carb": 14, "fat": 0.2}, {"id": "f_banana", "name": "موز", "calories": 89, "protein": 1, "carb": 23, "fat": 0.3}, {"id": "f_lowfat_milk", "name": "شیر کم‌چرب", "calories": 42, "protein": 3.4, "carb": 5, "fat": 1}, {"id": "f_lowfat_yogurt", "name": "ماست کم‌چرب", "calories": 60, "protein": 5, "carb": 6, "fat": 1.5}, {"id": "f_doogh", "name": "دوغ کم‌نمک", "calories": 35, "protein": 2, "carb": 4, "fat": 1}, {"id": "f_ghormeh", "name": "خورشت قورمه‌سبزی", "calories": 180, "protein": 12, "carb": 8, "fat": 10}, {"id": "f_gheimeh", "name": "خورشت قیمه", "calories": 190, "protein": 10, "carb": 9, "fat": 11}, {"id": "f_cutlet", "name": "کتلت گوشت", "calories": 270, "protein": 16, "carb": 14, "fat": 18}, {"id": "f_omelet", "name": "املت", "calories": 210, "protein": 10, "carb": 3, "fat": 18}, {"id": "f_salad_shirazi", "name": "سالاد شیرازی", "calories": 30, "protein": 1, "carb": 5, "fat": 0}, {"id": "f_barbari", "name": "نان بربری", "calories": 270, "protein": 9, "carb": 55, "fat": 1}];
+document.getElementById('load').addEventListener('click', ()=>{ const el=document.getElementById('foods'); el.innerHTML=''; sampleFoods.forEach(function(f){ el.innerHTML += '<div><strong>'+f.name+'</strong> — '+Math.round(f.calories)+' kcal • P:'+f.protein+'g C:'+f.carb+'g F:'+f.fat+'g</div>'; }); });
+function calcBMR(gender,age,weight,height){ if(gender==='male') return Math.round(88.362 + (13.397 * weight) + (4.799 * height) - (5.677 * age)); return Math.round(447.593 + (9.247 * weight) + (3.098 * height) - (4.330 * age)); }
+document.getElementById('calc').addEventListener('click', ()=>{
+  const gender=document.getElementById('gender').value; const age=+document.getElementById('age').value; const weight=+document.getElementById('weight').value; const height=+document.getElementById('height').value; const activity=+document.getElementById('activity').value;
+  const bmr=calcBMR(gender,age,weight,height); const tdee=Math.round(bmr*activity); let target=tdee; if(profile && profile.goal==='lose') target=Math.round(tdee*0.8); if(profile && profile.goal==='gain') target=Math.round(tdee*1.15);
+  document.getElementById('result').textContent = 'BMR: '+bmr+' kcal — TDEE: '+tdee+' kcal — هدف روزانه: '+target+' kcal';
+});
+</script>
+</body>
+</html>
